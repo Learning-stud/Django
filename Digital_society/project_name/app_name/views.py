@@ -38,3 +38,4 @@ def login (request):
     else:
         print("------------------>>>>  Page Loaded")
         return render(request,'app_name/login.html')
+

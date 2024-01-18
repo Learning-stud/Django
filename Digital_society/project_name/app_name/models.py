@@ -21,4 +21,18 @@ class Chairman(models.Model):
  houseno=models.CharField(max_length= 4)
 
  def __str__(self):
-     return self.firstname
+        return self.firstname + " | "+self.blockno
+
+
+class Member(models.Model):
+    userid = models.ForeignKey(User,on_delete=models.CASCADE)
+    firstname = models.CharField(max_length = 20)
+    lastname = models.CharField(max_length=20)
+    contact = models.CharField(max_length=11)
+    blockno = models.CharField(max_length=3)
+    houseno = models.CharField(max_length=4)
+    occupation = models.CharField(max_length=20)
+    job_address = models.TextField()
+    bloodgroup = models.CharField(max_length=3)
+    vehical_details = models.CharField(max_length=20)
+    pic = models.FileField(upload_to="media/upload",default="default.png")
