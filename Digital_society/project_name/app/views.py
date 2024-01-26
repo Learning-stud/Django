@@ -1,14 +1,18 @@
 from django.shortcuts import render,HttpResponseRedirect
-from .models import * 
+from .models import *
 from django.urls import reverse
 import random
-from .utils import * 
+from .utils import *
+
+from .models import *
+from .serializers import StudentSerializers
+from r
 
 """
-Django ORM 
+Django ORM
 
-get() : fetch data from model and return an object but only single records 
-    if there are multiple records found with given condition it will thrown an exception 
+get() : fetch data from model and return an object but only single records
+    if there are multiple records found with given condition it will thrown an exception
 
 """
 # Create your views here.
@@ -20,7 +24,7 @@ def home (request):
         context = {
             'uid':uid,
             'cid':cid,
-        }       
+        }
         return render(request,'app/index.html',context)
     else:
         return render(request,'app/login.html')
@@ -37,7 +41,7 @@ def login (request):
                 cid = Chairman.objects.get(userid = uid)
                 request.session['email']=uid.email
                 return HttpResponseRedirect(reverse('home'))
-            
+
                 # print("------------------>>>>  Password :",p_password)
                 # print("------------------>>>>  Email :",p_email)
                 # print("------------------>>>>  Uid :",uid)
@@ -51,7 +55,7 @@ def login (request):
         else:
             # print("------------------>>>>  Page Loaded")
             return render(request,'app/login.html')
-            
+
 def logout(request):
     if 'email' in request.session:
         del request.session['email']
@@ -71,18 +75,18 @@ def profile(request):
     else:
         return HttpResponseRedirect(reverse('login'))
 
- 
+
 def change_password(request):
     if "email" in request.session:
         uid = User.objects.get(email = request.session['email'])
         cid = Chairman.objects.get(userid = uid)
-        
+
         currentpassword = request.POST['currentpassword']
         newpassword = request.POST['newpassword']
         if uid.password == currentpassword:
             uid.password = newpassword
-            uid.save() # update 
-        
+            uid.save() # update
+
             del request.session['email']
             s_msg = "Successfully Password Changed"
             return render(request,"app/login.html",{'s_msg':s_msg})
@@ -90,12 +94,12 @@ def change_password(request):
             e_msg = "Invalid current password"
             del request.session['email']
             return render(request,"app/login.html",{'e_msg':e_msg})
-        
+
 def change_profile(request):
     if "email" in request.session:
         uid = User.objects.get(email = request.session['email'])
         cid = Chairman.objects.get(userid = uid)
-        
+
         if request.POST:
             cid.firstname = request.POST['firstname']
             cid.lastname =  request.POST['lastname']
@@ -112,7 +116,7 @@ def change_profile(request):
                 'cid' : cid,
         }
         return render(request,"app/profile.html",context)
-       
+
 def add_member(request):
     if "email" in request.session:
         uid = User.objects.get(email = request.session['email'])
@@ -125,7 +129,7 @@ def add_member(request):
             firstname = request.POST['firstname']
             l1 = ["cds33frr","dsc323vs","fdv24bb","nb534vdf","mn345bgf"]
             password = random.choice(l1)+email[3:6]+contact[4:7]
-            muid = User.objects.create(email = request.POST['email'],password = password,role="member") 
+            muid = User.objects.create(email = request.POST['email'],password = password,role="member")
             if muid:
                 mid = Member.objects.create(
                                 userid = muid,
@@ -140,14 +144,14 @@ def add_member(request):
                                 vehical_details = request.POST['vehical_details']
                         )
                 if mid:
-                    mymailfunction("Welcome to Digital Society","mymailtemplate",email,{'firstname' : firstname,'password':password})                    
+                    mymailfunction("Welcome to Digital Society","mymailtemplate",email,{'firstname' : firstname,'password':password})
                 context = {
                     'uid' : uid,
                     'cid' : cid,
                     's_msg' : "successfully Member added"
                     }
                 return render(request,"app/addMember.html",context)
-                
+
 
         context = {
                 'uid' : uid,
@@ -155,7 +159,7 @@ def add_member(request):
         }
         return render(request,"app/addMember.html",context)
 
-        
+
 def all_member(request):
     if "email" in request.session:
         uid = User.objects.get(email = request.session['email'])
@@ -167,7 +171,7 @@ def all_member(request):
                 'mall' : mall,
         }
         return render(request,"app/allmembers.html",context)
-    
+
 def edit_member(request,pk):
     if "email" in request.session:
         print("---->>>pk",pk)
@@ -180,11 +184,11 @@ def edit_member(request,pk):
                 'mid' : mid,
         }
         return render(request,"app/editMember.html",context)
-    
+
 def delete_member(request,pk):
     if "email" in request.session:
         mid = Member.objects.get(id = pk)
-        mid.delete()  # delete 
+        mid.delete()  # delete
         return HttpResponseRedirect(reverse("all-member"))
 
 def add_notice(request):
@@ -214,7 +218,7 @@ def add_notice(request):
 # def home (request,msg=None):
     # e_msg = {}
     # if msg:
-        # e_msg = {'e_msg':msg} 
+        # e_msg = {'e_msg':msg}
     # return render(request,'app/login.html',e_msg)
 
 # def index(request):
