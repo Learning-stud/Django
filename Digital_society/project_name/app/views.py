@@ -215,12 +215,12 @@ def add_notice(request):
 # ============================================================================================
 # ============================================================================================
 # ------------------------------------------------
-# def home (request,msg=None):
-    # e_msg = {}
-    # if msg:
-        # e_msg = {'e_msg':msg}
-    # return render(request,'app/login.html',e_msg)
+def home (request,msg=None):
+    e_msg = {}
+    if msg:
+         e_msg = {'e_msg':msg}
+    return render(request,'app/login.html',e_msg)
 
-# def index(request):
-#     return render(request,'app/index.html')
+def index(request):
+     return render(request,'app/index.html')
 # ------------------------------------------------
